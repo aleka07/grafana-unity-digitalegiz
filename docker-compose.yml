@@ -1,0 +1,25 @@
+services:
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana-unity
+    ports:
+      - "3000:3000"
+    volumes:
+      # Этот том сохраняет ваши дашборды и настройки Grafana
+      - grafana-storage:/var/lib/grafana
+      # Этот том монтирует собранный плагин в директорию плагинов Grafana
+      - ./unity-plugin-for-grafana:/var/lib/grafana/plugins/ertis-research-unity-panel
+    environment:
+      # Позволяет Grafana загружать неподписанный плагин
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=ertis-unity-panel
+    # Подключаем сервис к сети digital-egiz
+    networks:
+      - digital-egiz
+
+volumes:
+  grafana-storage: {}
+
+# Определяем нашу общую сеть как внешнюю
+networks:
+  digital-egiz:
+    external: true
